@@ -17,20 +17,12 @@ function siguienteId(coleccion) {
     return sequenceDocument.sequence_value;
 }
 
+db.createCollection("roles");
 db.roles.insertMany([
-    {
-        "nombre": "Ivan",
-        "usuario": "ivan123",
-        "rol": "admin",
-        "email": "Ivan123@gmail.com"
-    },
-    {
-        "nombre": "Juan",
-        "usuario": "juan123",
-        "rol": "usuario",
-        "email": "juan123@gmail.com"
-    }
-])
+    { id: Number(siguienteId("roles")) ,name: "admin",access:["/medico","/usuario","/cita", "/acudiente"]},
+    { id: Number(siguienteId("roles")), name: "medico", access: ["/usuario","/cita", "/acudiente"] },
+    { id: Number(siguienteId("roles")), name: "usuario", access: ["/usuario"] }
+]);
 
 db.createCollection("usuario", {
     capped: true,
@@ -376,3 +368,4 @@ db.cita.insertMany([
 
     }
 ]);
+
