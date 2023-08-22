@@ -2,43 +2,54 @@ import dotenv from "dotenv";
 import {con} from "../../config/connection/atlas.js";
 import { SignJWT, jwtVerify } from "jose"
 import { ObjectId } from "mongodb";
+import {Router} from "express";
 dotenv.config();
 
-const conexionDB = await con();
+const crearToken = Router();
+const verifyToken = Router();
 
-const crearToken = async (req, res) => {
-    const encoder = new TextEncoder();
+const db = await con();
+const rol = await db.collection('roles');
 
-    const result = await conexionDB.collection('roles').findOne({usuario: req.params.usuario});
-    if (!result) return res.status(404).send('Usuario no encontrado');
-    const id = result._id.toString();
-    
-    const jwtConstructor = await new SignJWT({ id: id})
-        .setProtectedHeader({ alg: 'HS256', typ: 'JWT' })
-        .setIssuedAt()
-        .setExpirationTime('1h')
-        .sign(encoder.encode(process.env.JWT_PRIVATE_KEY));
-    res.send(jwtConstructor);
-}
+crearToken.get('/:colleccion', async (req, res) => {
+    const { colleccion } = req.params;
+    let result = undefined;
 
-const validarToken = async (token) => {
+    try {
+        result = await rol.aggregate([{ $match: { name: colleccion } }, { $project: { _id: 1 } }]).toArray()
+
+        const encoder = new TextEncoder();
+        const jwtconstructor = new SignJWT(result[0]);
+        const jwt = await jwtconstructor
+            .setProtectedHeader({ alg: "HS256", typ: "JWT" })
+            .setIssuedAt()
+            .setExpirationTime("30m")
+            .sign(encoder.encode(process.env.JWT_PASSWORD));
+        res.send(jwt)
+    } catch (error) {
+        res.status(404).send({ status: 404, message: "Collection not found" })
+    }   
+});
+
+verifyToken.use('/', async (req, res, next) => {
+    const { authorization } = req.headers;
+    if (!authorization) return res.status(400).send({ status: 400, token: "Token not sent" });
     try {
         const encoder = new TextEncoder();
         const jwtData = await jwtVerify(
-            token,
-            encoder.encode(process.env.JWT_PRIVATE_KEY)
+            authorization,
+            encoder.encode(process.env.JWT_PASSWORD)
         );
-
-        return await conexionDB.collection('roles').findOne({_id: new ObjectId(jwtData.payload.id)});
+        req.data = jwtData;
+        const checkAccess = await rol.aggregate([{ $match: { _id: new ObjectId(req.data.payload._id) } }, { $project: { access: 1 } }]).toArray()
+        const access = checkAccess[0].access
+        // Validacion del rol permitido en la base de datos con el router al que se desea acceder
+        if(!access.includes(req.baseUrl)) return res.status(401).json({status:401,message:"You do not have permission to access"});
+        console.log(checkAccess[0].access);
+        //if (access.includes())
+        next();
     } catch (error) {
-        console.log("aqui");
-        console.log(error);
-        return false;
+        res.status(498).json({ status: 498, message: error.message })//"Token has expired or is invalid"
     }
-
-}
-
-export {
-    crearToken,
-    validarToken
-}
+});
+export { crearToken, verifyToken }
