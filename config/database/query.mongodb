@@ -19,15 +19,15 @@ function siguienteId(coleccion) {
 
 db.roles.insertMany([
     {
-        "nombre": "Pepe",
-        "usuario": "pepe123",
+        "nombre": "Ivan",
+        "usuario": "ivan123",
         "rol": "admin",
-        "email": "pepe123@gmail.com"
+        "email": "Ivan123@gmail.com"
     },
     {
         "nombre": "Juan",
         "usuario": "juan123",
-        "rol": "vendedor",
+        "rol": "usuario",
         "email": "juan123@gmail.com"
     }
 ])
