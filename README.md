@@ -21,7 +21,7 @@ ATLAS_PASSWORD="tu_contraseña_de_MongoDB_Atlas"
 ATLAS_DB="nombre_de_tu_base_de_datos_en_Atlas"
 
 # Clave privada para JWT
-JWT_PRIVATE_KEY="tu_contraseña_de_creación_del_token"
+JWT_PASSWORD="tu_contraseña_de_creación_del_token"
 ```
 
 ## Instalación de Dependencias
@@ -43,26 +43,32 @@ npm run dev
 ## Generación del token
 
 Para de interactuar con los endpoints debes primeramente crear un token  a partir del usuario y su rol:
-*Por defecto tenemos 2 tipos de usuarios en la base de datos, ivan123(admin) y juan123(usuario).*
+
+1. **Rol: admin**
+   - Acceso:
+     - "/medico"
+     - "/usuario"
+     - "/cita"
+     - "/acudiente"
+2. **Rol: medico**
+   - Acceso:
+     - "/usuario"
+     - "/cita"
+     - "/acudiente"
+3. **Rol: usuario**
+   - Acceso:
+     - "/usuario"
 
 ```
-GET http://127.10.10.15:3001/token/ivan123
+GET http://127.10.10.15:3001/token/<rol>
 ```
 
 Usaremos el usuario que tiene rol admin para poder ingresar a todas las peticiones.
 
-Respuesta:
+Se generará el siguiente código que se debe agregar al HTTP Header de tipo Authorization:
 
 ```json
 eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ZTRiODM1NmRmODc3ZmZhYjI3NTUzYiIsImlhdCI6MTY5MjcyNjYwNywiZXhwIjoxNjkyNzMwMjA3fQ.Cj9iA7QH6s3Eweew7Frw0LY09SSRbAYqwTzehheAUWg
-```
-
-Se generará el siguiente código que se debe agregar al HTTP Header de tipo Authorization, junto con la palabra "Bearer":
-
-HTTP Headers que debe agregar de tipo Authorization:
-
-```json
-Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ZTRiODM1NmRmODc3ZmZhYjI3NTUzYiIsImlhdCI6MTY5MjcyNjYwNywiZXhwIjoxNjkyNzMwMjA3fQ.Cj9iA7QH6s3Eweew7Frw0LY09SSRbAYqwTzehheAUWg
 ```
 
 ## Petición
