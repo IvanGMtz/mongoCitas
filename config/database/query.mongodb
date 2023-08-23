@@ -32,7 +32,7 @@ db.createCollection("usuario", {
         $jsonSchema: {
             bsonType: 'object',
             additionalProperties: false,
-            required: ['_id', 'id','nombre', 'primer_apellido', 'telefono','direccion','tipodoc', 'acudiente'],
+            required: ['_id', 'id','nombre', 'primer_apellido', 'telefono','direccion','tipodoc'],
             properties: {
                 _id: {
                     bsonType: "objectId",
@@ -44,45 +44,46 @@ db.createCollection("usuario", {
                 },
                 nombre: {
                     bsonType: 'string',
-                    description: 'El nombre_usuario es obligatorio',
+                    description: 'El NOMBRE es string',
                 },
                 segundo_nombre: {
                     bsonType: 'string',
-                    description: 'El segundo_nombre es obligatorio',
+                    description: 'El SEGUNDO_NOMBRE no es obligatorio y debe ser un string',
                 },
                 primer_apellido: {
                     bsonType: 'string',
-                    description: 'El primer_apellido es obligatorio'
+                    description: 'El PRIMER_APELLIDO es string'
                 },
                 segundo_apellido: {
                     bsonType: 'string',
-                    description: 'El segundo_apellido es obligatorio'
+                    description: 'El SEGUNDO_APELLIDO no es obligatorio y debe ser un string'
                 },
                 telefono: {
                     bsonType: 'string',
-                    description: 'El telefono es obligatorio',
+                    description: 'El TELEFONO es string y solo los 10 digitos',
                     pattern: '^[0-9]{10}$'
                 },
                 direccion: {
                     bsonType: 'string',
-                    description: 'El direccion es obligatorio'
+                    description: 'El DIRECCION debe ser un string'
                 },
                 email: {
                     bsonType: 'string',
-                    description: 'El email no es obligatorio ni opcional pero el dato debe ser en formato string',
+                    description: 'El EMAIL no es obligatorio ni opcional pero el dato debe ser en formato string',
                     pattern: '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
                 },
                 tipodoc: {
                     bsonType: 'string',
-                    description: 'El tipodoc no es obligatorio ni opcional pero el dato debe ser en formato string'
+                    description: 'El TIPODOC obligatorio debe ser en formato string y ser "CC" o "TI"',
+                    enum: ["CC", "TI"]
                 },
                 genero: {
                     bsonType: 'string',
-                    description: 'El genero no es obligatorio ni opcional pero el dato debe ser en formato string'
+                    description: 'El GENERO no es obligatorio ni opcional pero el dato debe ser en formato string'
                 },
                 acudiente: {
                     bsonType: 'int',
-                    description: 'El acudiente es obligatorio y debe ser un numero entero'
+                    description: 'El ACUDIENTE no es obligatorio y debe ser un numero entero'
                 }
             }
         }
@@ -99,9 +100,8 @@ db.usuario.insertMany([
         telefono: '1234567890',
         direccion: 'Calle 123, Ciudad',
         email: 'juan@example.com',
-        tipodoc: 'Cédula de Ciudadanía',
-        genero: 'Masculino',
-        acudiente: 1
+        tipodoc: 'CC',
+        genero: 'Masculino'
     },
     {
         id: Number(siguienteId("usuario")),
@@ -112,10 +112,9 @@ db.usuario.insertMany([
         telefono: '9876543210',
         direccion: 'Calle 123, Ciudad',
         email: 'maria@example.com',
-        tipodoc: 'Cédula de Ciudadanía',
-        genero: 'Femenino',
-        acudiente: 2
-    },
+        tipodoc: 'CC',
+        genero: 'Femenino'
+        },
     {
         id: Number(siguienteId("usuario")),
         nombre: 'Carlos',
@@ -124,7 +123,7 @@ db.usuario.insertMany([
         telefono: '5555555555',
         direccion: 'Calle 123, Ciudad',
         email: 'carlos@example.com',
-        tipodoc: 'Cédula de Ciudadanía',
+        tipodoc: 'TI',
         genero: 'Masculino',
         acudiente: 3
     },
@@ -137,7 +136,7 @@ db.usuario.insertMany([
         telefono: '9999999999',
         direccion: 'Calle 123, Ciudad',
         email: 'ana@example.com',
-        tipodoc: 'Cédula de Ciudadanía',
+        tipodoc: 'TI',
         genero: 'Femenino',
         acudiente: 4
     },
@@ -149,7 +148,7 @@ db.usuario.insertMany([
         telefono: '1111111111',
         direccion: 'Calle 123, Ciudad',
         email: 'pedro@example.com',
-        tipodoc: 'Tarjeta de Identidad',
+        tipodoc: 'TI',
         genero: 'otro',
         acudiente: 5
     }
