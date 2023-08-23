@@ -212,6 +212,160 @@ Respuesta:
 ...]
 ```
 
+### Obtener todas las citas alfabéticamente
+
+**Petición:**
+
+```http
+GET http://127.10.10.15:3001/cita
+```
+
+**Respuesta:**
+
+```json
+[
+  {
+    "fecha": "2023-07-30T00:00:00.000Z",
+    "estado": "Realizada",
+    "paciente": "Ana López",
+    "medico": "Dra. Laura Gómez"
+  },
+  {
+    "fecha": "2023-07-23T00:00:00.000Z",
+    "estado": "Realizada",
+    "paciente": "Carlos González",
+    "medico": "Dr. Luis Martínez"
+  },
+  ...
+]
+```
+
+### Encontrar la próxima cita para un paciente específico
+
+**Petición:**
+
+```http
+GET http://127.10.10.15:3001/cita/usuario/1
+```
+
+**Respuesta:**
+
+```json
+{
+  "fecha": "2023-08-05T00:00:00.000Z",
+  "estado": "Pendiente",
+  "paciente": "María Rodríguez",
+  "medico": "Dr. Juan Pérez"
+}
+```
+
+### Encontrar todos los pacientes que tienen citas con un médico específico
+
+**Petición:**
+
+```http
+GET http://127.10.10.15:3001/cita/medico/1
+```
+
+**Respuesta:**
+
+```json
+[
+  {
+    "fecha": "2023-08-05T00:00:00.000Z",
+    "estado": "Pendiente",
+    "paciente": "María Rodríguez"
+  },
+  {
+    "fecha": "2023-08-15T00:00:00.000Z",
+    "estado": "Pendiente",
+    "paciente": "Javier Pérez"
+  },
+  ...
+]
+```
+
+### Encontrar todas las citas para un día específico
+
+**Petición:**
+
+```http
+GET http://127.10.10.15:3001/cita/2023-07-30
+```
+
+**Respuesta:**
+
+```json
+[
+  {
+    "estado": "Realizada",
+    "paciente": "Ana López",
+    "medico": "Dra. Laura Gómez"
+  },
+  ...
+]
+```
+
+### Contar el número de citas que un médico tiene en un día específico
+
+**Petición:**
+
+```http
+GET http://127.10.10.15:3001/cita/2023-07-30/1
+```
+
+**Respuesta:**
+
+```json
+{
+  "medico": "Dr. Juan Pérez",
+  "fecha": "2023-07-30",
+  "cantidadCitas": 5
+}
+```
+
+### Obtener todas las citas realizadas por los pacientes de un género si su estado de la cita fue atendida
+
+**Petición:**
+
+```http
+GET http://127.10.10.15:3001/cita/atendida/Femenino
+```
+
+**Respuesta:**
+
+```json
+[
+  {
+    "fecha": "2023-07-30T00:00:00.000Z",
+    "paciente": "Ana López",
+    "medico": "Dra. Laura Gómez"
+  },
+  ...
+]
+```
+
+### Mostrar todas las citas rechazadas en un mes específico
+
+**Petición:**
+
+```http
+GET http://127.10.10.15:3001/cita/rechazada/2023-07
+```
+
+**Respuesta:**
+
+```json
+[
+  {
+    "fecha": "2023-07-12T00:00:00.000Z",
+    "paciente": "María Rodríguez",
+    "medico": "Dr. Juan Pérez"
+  },
+  ...
+]
+```
+
 ## Dependencias Utilizadas
 
 Este proyecto utiliza diversas dependencias para su funcionamiento. A continuación, se detallan las dependencias principales y sus respectivas versiones:
